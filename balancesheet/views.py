@@ -2,15 +2,42 @@
 
 import logging
 
+from tabula import read_pdf
+
 from rest_framework.decorators import api_view
-from balancesheet.utility import upload_data_to_database, get_data, to_dict
+from balancesheet.utility import upload_data_to_database, get_data, to_dict, create_csv
 from rest_framework.response import Response
 from rest_framework import status
 from balancesheet.response import ErrorResponse, ServerErrorResponse, SuccessResponse
-from balancesheet.constants import Success,Error
-
+from balancesheet.constants import Success, Error
 
 logger = logging.getLogger(__name__)
+
+
+@api_view(['POST'])
+def convert_pdf_to_csv(request):
+    try:
+        data = request.data
+        path = data.get('path', None)
+        if path:
+            df = read_pdf(path)
+            arr = df[0].to_numpy()
+            is_created = create_csv(arr)
+
+            if is_created:
+                response = SuccessResponse(msg=Success.SHEET_CONVERT_SUCCESS)
+                return Response(to_dict(response), status=status.HTTP_200_OK)
+            else:
+                response = ErrorResponse(msg=Error.SHEET_CONVERT_ERROR)
+                return Response(to_dict(response), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            response = ErrorResponse(msg=Error.PATH_NOT_PROVIDED)
+            return Response(to_dict(response), status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        logger.error(ErrorResponse.EXCEPTION + str(e))
+        response = ServerErrorResponse()
+        return Response(to_dict(response), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
@@ -33,7 +60,7 @@ def upload_sheet(request):
             return Response(to_dict(response), status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
-        logger.error(ErrorResponse.EXCEPTION + str(e))
+        logger.error(Error.EXCEPTION + str(e))
         response = ServerErrorResponse()
         return Response(to_dict(response), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

@@ -2,3 +2,4 @@ balancesheet/migrations/*
 venv/*
 .idea/*
 *.pyc
+BalSheet.csv
