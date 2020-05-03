@@ -41,7 +41,7 @@ def convert_pdf_to_csv(request):
 
 
 @api_view(['POST'])
-def upload_sheet(request):
+def upload_csv(request):
     try:
         data = request.data
         path = data.get('path', None)
