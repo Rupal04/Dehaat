@@ -1,0 +1,4 @@
+balancesheet/migrations/*
+venv/*
+.idea/*
+*.pyc
