@@ -12,7 +12,7 @@ class Error(object):
     ERROR_RESPONSE = "Error"
     SERVER_ERROR_5XX = "SERVER ERROR"
 
-    EXCEPTION = "Some Unexcepted error occurred. Error is : "
+    EXCEPTION = "Some Unexpected error occurred. Error is : "
     MISSING_DETAILS = "Some of the input details are missing."
 
     SHEET_CONVERT_ERROR = "Error in converting sheet."

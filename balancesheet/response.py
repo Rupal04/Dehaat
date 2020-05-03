@@ -1,5 +1,6 @@
 from balancesheet.constants import Success,Error
 
+
 class SuccessResponse(object):
     def __init__(self, results=None, msg=Success.SUCCESS_RESPONSE):
         if results is not None:

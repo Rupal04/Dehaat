@@ -21,7 +21,10 @@ def convert_pdf_to_csv(request):
         path = data.get('path', None)
         if path:
             df = read_pdf(path)
+
+            # convert dataframe to ndarray
             arr = df[0].to_numpy()
+
             is_created = create_csv(arr)
 
             if is_created:
@@ -35,7 +38,7 @@ def convert_pdf_to_csv(request):
             return Response(to_dict(response), status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
-        logger.error(ErrorResponse.EXCEPTION + str(e))
+        logger.error(Error.EXCEPTION + str(e))
         response = ServerErrorResponse()
         return Response(to_dict(response), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -86,7 +89,3 @@ def get_variable_data(request):
         logger.error(Error.EXCEPTION + str(e))
         response = ServerErrorResponse()
         return Response(to_dict(response), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
